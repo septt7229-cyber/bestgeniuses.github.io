@@ -1,2 +1,763 @@
-# bestgeniuses.github.io
-Bestgeniuses Team Website
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bestgeniuses · 团队大会 2025</title>
+<style>
+  :root {
+    --gold:    #C9A84C;
+    --gold-lt: #E8C97A;
+    --gold-dk: #8A6820;
+    --bg:      #0D0E11;
+    --bg2:     #141519;
+    --bg3:     #1C1D24;
+    --line:    #2A2B34;
+    --text:    #E8E9F0;
+    --muted:   #7A7C8E;
+    --white:   #FFFFFF;
+
+    --A: #6C8EFF;
+    --B: #4DCFAE;
+    --C: #FF7E5F;
+    --D: #B07FFF;
+    --E: #FFB347;
+    --F: #5FC8FF;
+    --G: #FF6FA8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', 'Microsoft YaHei', 'Hiragino Sans GB', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 60px 20px 48px;
+    position: relative;
+  }
+
+  .logo-ring {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .logo-ring::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.25);
+  }
+  .logo-ring span {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -1px;
+  }
+
+  .brand {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .search-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ── SEARCH ── */
+  .search-section {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 20px 48px;
+  }
+
+  .search-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .search-box {
+    position: relative;
+  }
+
+  .search-box input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1.5px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 52px 16px 20px;
+    color: var(--white);
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-box input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+  }
+
+  .search-icon {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+
+  /* ── DROPDOWN SUGGESTIONS ── */
+  .suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0; right: 0;
+    background: var(--bg3);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 10;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    display: none;
+  }
+  .suggestions.open { display: block; }
+
+  .sugg-item {
+    padding: 12px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--line);
+  }
+  .sugg-item:last-child { border-bottom: none; }
+  .sugg-item:hover { background: rgba(255,255,255,0.05); }
+
+  .sugg-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .sugg-names { flex: 1; }
+  .sugg-real  { font-size: 14px; color: var(--white); font-weight: 500; }
+  .sugg-alias { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .sugg-group {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    opacity: 0.9;
+  }
+
+  /* ── RESULT CARD ── */
+  .result-area {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+    display: none;
+  }
+  .result-area.visible { display: block; }
+
+  .member-card {
+    background: var(--bg2);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    animation: slideUp 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes slideUp {
+    from { opacity:0; transform:translateY(24px) scale(0.97); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .card-header {
+    padding: 28px 28px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+
+  .card-accent-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .member-avatar {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .member-meta { flex: 1; }
+
+  .member-alias {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+
+  .member-fullname {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .member-en {
+    font-size: 13px;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .group-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 10px;
+  }
+
+  /* ── CARD BODY ── */
+  .card-body {
+    padding: 22px 28px 28px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .info-label {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .info-value {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .partner-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px 14px;
+    margin-top: 4px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .partner-chip:hover {
+    background: rgba(255,255,255,0.04);
+  }
+  .partner-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .partner-info .p-alias { font-size: 14px; font-weight: 600; color: var(--white); }
+  .partner-info .p-name  { font-size: 12px; color: var(--muted); }
+
+  .divider {
+    height: 1px;
+    background: var(--line);
+    margin: 2px 0;
+  }
+
+  /* ── ALL GROUPS SECTION ── */
+  .groups-section {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+  }
+
+  .group-card {
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .group-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .group-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .group-letter {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .group-name-text {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  .group-members { display: flex; flex-direction: column; gap: 8px; }
+
+  .gm-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: var(--bg3);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .gm-row:hover { background: rgba(255,255,255,0.06); }
+
+  .gm-avatar {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .gm-alias  { font-size: 14px; font-weight: 600; color: var(--white); }
+  .gm-name   { font-size: 11px; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--line);
+    text-align: center;
+    padding: 28px 20px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── NOT FOUND ── */
+  .not-found {
+    text-align: center;
+    padding: 32px 0;
+    color: var(--muted);
+    font-size: 14px;
+    display: none;
+  }
+  .not-found.visible { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .card-header { flex-direction: column; align-items: flex-start; }
+    .groups-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-ring"><span>BG</span></div>
+  <p class="brand">Bestgeniuses</p>
+  <h1>倍工 Bestgeniuses</h1>
+</header>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-box" id="searchBox">
+    <input type="text" id="searchInput" placeholder="" autocomplete="off"/>
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+  <p class="search-hint">请输入您的中文名或英文名或工作名以了解详细信息及情况</p>
+</div>
+
+<!-- RESULT -->
+<div class="result-area" id="resultArea">
+  <div class="member-card" id="memberCard"></div>
+  <p class="not-found" id="notFound">未找到该成员，请检查输入是否正确。</p>
+</div>
+
+<!-- ALL GROUPS (hidden by default) -->
+<div class="groups-section" id="groupsSection" style="display:none">
+  <p class="section-title">全组织架构总览</p>
+  <div class="groups-grid" id="groupsGrid"></div>
+</div>
+
+<footer>Bestgeniuses Internal · 仅限团队内部使用</footer>
+
+<script>
+// ── DATA ──
+const GROUPS = {
+  A: { name: '最高战略与顶层设计', color: '#6C8EFF' },
+  B: { name: '底层逻辑与架构优化', color: '#4DCFAE' },
+  C: { name: '大本营运营与实战宣传', color: '#FF7E5F' },
+  D: { name: '精细化运营与商务剖析', color: '#B07FFF' },
+  E: { name: '地面突击与现实落地', color: '#FFB347' },
+  F: { name: '跨区域协同与资源保障', color: '#5FC8FF' },
+  G: { name: '前沿开发与境外资源注入', color: '#FF6FA8' },
+};
+
+const MEMBERS = [
+  {
+    alias: '七七', real: '田宜衡', en: 'Sept.Tian', group: 'A',
+    role: '团队最高统筹者、整体项目负责人。主导全盘商务盘整与经济模型顶层建构。',
+    partner: '小茵', note: '团队最高统筹创始人',
+  },
+  {
+    alias: '小茵', real: '杨美玲', en: 'Eromy.Yang', group: 'A',
+    role: '核心合伙人，中央决策双人组成员。负责最高战略协同推演与核心团队管理。',
+    partner: '七七', note: '黄金三角 / 决策双人组',
+  },
+  {
+    alias: '彦灼', real: '刘彦灼', en: 'Alex.Liu', group: 'B',
+    role: '技术核心。擅长严密的逻辑剖析，对前沿架构与底层数据抓取进行深度优化。',
+    partner: '青白', note: '技术核心架构搭档',
+  },
+  {
+    alias: '青白', real: '叶幸镇', en: 'Bryte.Ye', group: 'B',
+    role: '技术核心、长期信任骨干。主导前沿逻辑创新设计与核心信息流抓取。',
+    partner: '彦灼', note: '长期挚友 / 技术定海神针',
+  },
+  {
+    alias: '玖九', real: '李悦', en: 'Rio.Li', group: 'C',
+    role: '核心合伙人、黄金三角成员。全面负责杭州大本营的稳固运营底盘，保障核心战略高效执行。',
+    partner: '神亿', note: '黄金三角 / 落地坚实后盾',
+  },
+  {
+    alias: '神亿', real: '肖磊磊', en: 'Yeck.Xiao', group: 'C',
+    role: '宣传实践先锋。依托强信任链，负责一线宣传实践、内容高频产出与全面落地执行。',
+    partner: '玖九', note: '强信任链 / 技能型先锋',
+  },
+  {
+    alias: '汀烟', real: '韩靖远', en: 'Lock.Han', group: 'D',
+    role: '运营底盘骨干。专注于本地商务对接、细分内容运营以及整体流程的协同优化。',
+    partner: '句满', note: '运营底盘核心骨干',
+  },
+  {
+    alias: '句满', real: '万晓谖', en: 'Judy.Wan', group: 'D',
+    role: '运营与商务中坚。基于深厚合作信任，对本地商务推进路径与多维运营进行复盘与最优化剖析。',
+    partner: '汀烟', note: '深度信任 / 合作沉淀',
+  },
+  {
+    alias: '泽熙', real: '沈泽熙', en: 'Kraven.Shen', group: 'E',
+    role: '地面攻坚先锋。凭借强烈的项目认同感与过硬的专项技能，负责地面商务攻坚与现实市场突破。',
+    partner: '林仔', note: '强认同感 / 专项技能突击',
+  },
+  {
+    alias: '林仔', real: '徐少东', en: 'Iven.Xu', group: 'E',
+    role: '实战骨干。自2021年起亲自带教，信任笃深。负责一线商务盘整与核心内容运营，将最真实的落地改善经验实时反馈至决策层。',
+    partner: '泽熙', note: '2021年起亲自带教 / 师徒情深',
+  },
+  {
+    alias: 'yb', real: '林焕栩', en: 'Jackson.Lin', group: 'F',
+    role: '核心编码骨干。负责核心代码落地与跨区域技术协同，同时作为纽带协助调度团队人力与物质资源。',
+    partner: '蜜塔', note: '跨区域技术协同与资源保障',
+  },
+  {
+    alias: '蜜塔', real: '李禅心', en: 'mita.Li', group: 'F',
+    role: '商务多渠道执行先锋。负责多维内容运营与商务推进，并兼顾团队人力资源协调与后勤物质保障。',
+    partner: 'yb', note: '多维实战 / 资源后勤保障',
+    aliasAlt: '蛋挞',
+  },
+  {
+    alias: '小義', real: '张晋義', en: 'Joseph.Cheung', group: 'G',
+    role: '技术研发骨干。专职负责软件开发与3D建模实现，同时发挥国际化视野，为团队引入前沿境外帮助与技术资源。',
+    partner: 'Black', note: '前沿视野 / 境外技术协同',
+  },
+  {
+    alias: 'Black', real: '谭子博', en: 'Patrick.Tan', group: 'G',
+    role: '核心技术研发。支撑软件与3D建模的核心技术闭环，并负责境外视野与相关资源的无缝对接。',
+    partner: '小義', note: '国际化视野 / 技术闭环支持',
+  },
+];
+
+// ── HELPERS ──
+function getGroupColor(g) { return GROUPS[g]?.color || '#888'; }
+
+function initials(alias) {
+  if (!alias) return '?';
+  const ch = [...alias];
+  return ch[0].toUpperCase();
+}
+
+function alphaHex(hex, alpha) {
+  // convert #RRGGBB to rgba
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function findMember(query) {
+  if (!query) return null;
+  const q = query.trim().toLowerCase();
+  return MEMBERS.find(m =>
+    m.alias.toLowerCase().includes(q) ||
+    m.real.toLowerCase().includes(q) ||
+    m.en.toLowerCase().includes(q) ||
+    (m.aliasAlt && m.aliasAlt.toLowerCase().includes(q))
+  ) || null;
+}
+
+function searchSuggestions(query) {
+  if (!query || query.trim().length < 1) return [];
+  const q = query.trim().toLowerCase();
+  return MEMBERS.filter(m =>
+    m.alias.toLowerCase().includes(q) ||
+    m.real.toLowerCase().includes(q) ||
+    m.en.toLowerCase().includes(q) ||
+    (m.aliasAlt && m.aliasAlt.toLowerCase().includes(q))
+  ).slice(0, 6);
+}
+
+
+
+// ── RENDER MEMBER CARD ──
+function renderCard(m) {
+  const color = getGroupColor(m.group);
+  const partnerObj = MEMBERS.find(x => x.alias === m.partner);
+  const area = document.getElementById('resultArea');
+  const card = document.getElementById('memberCard');
+  const nf   = document.getElementById('notFound');
+
+  area.classList.add('visible');
+  card.style.display = 'block';
+  nf.classList.remove('visible');
+
+  // Re-trigger animation
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+
+  card.innerHTML = `
+    <div class="card-accent-bar" style="background: linear-gradient(90deg, ${color}, ${alphaHex(color, 0.2)})"></div>
+    <div class="card-header">
+      <div class="member-avatar" style="background:${alphaHex(color,0.15)}; color:${color}">
+        ${initials(m.alias)}
+      </div>
+      <div class="member-meta">
+        <div class="member-alias">${m.alias}${m.aliasAlt ? ' <span style="font-size:16px;opacity:0.6">/ '+m.aliasAlt+'</span>' : ''}</div>
+        <div class="member-fullname">${m.real}</div>
+        <div class="member-en">${m.en}</div>
+        <div class="group-badge" style="background:${alphaHex(color,0.12)};color:${color}">
+          <span style="font-size:16px;font-weight:800">${m.group}组</span>
+          <span style="font-size:12px;opacity:0.8">· ${GROUPS[m.group].name}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="info-row">
+        <span class="info-label">核心职责</span>
+        <span class="info-value">${m.role}</span>
+      </div>
+      <div class="divider"></div>
+      <div class="info-row">
+        <span class="info-label">搭档成员</span>
+        ${partnerObj ? `
+        <div class="partner-chip" onclick="showMember('${partnerObj.alias}')">
+          <div style="width:8px;height:8px;border-radius:50%;background:${getGroupColor(partnerObj.group)};flex-shrink:0"></div>
+          <div class="partner-info">
+            <div class="p-alias">${partnerObj.alias}</div>
+            <div class="p-name">${partnerObj.real} · ${partnerObj.en}</div>
+          </div>
+          <svg style="margin-left:auto;color:#7A7C8E" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>` : '<span class="info-value">—</span>'}
+      </div>
+      ${m.note ? `
+      <div class="divider"></div>
+      <div class="info-row">
+        <span class="info-label">备注</span>
+        <span class="info-value" style="color:#7A7C8E">${m.note}</span>
+      </div>` : ''}
+    </div>
+  `;
+
+  // Scroll into view
+  setTimeout(() => area.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function showMember(alias) {
+  const m = MEMBERS.find(x => x.alias === alias);
+  if (m) {
+    document.getElementById('searchInput').value = m.alias;
+    renderCard(m);
+    document.getElementById('suggestions').classList.remove('open');
+  }
+}
+
+// ── SEARCH LOGIC ──
+const input = document.getElementById('searchInput');
+const suggestionsEl = document.getElementById('suggestions');
+
+input.addEventListener('input', () => {
+  const q = input.value.trim();
+  const matches = searchSuggestions(q);
+
+  if (q.length === 0 || matches.length === 0) {
+    suggestionsEl.classList.remove('open');
+    suggestionsEl.innerHTML = '';
+    return;
+  }
+
+  suggestionsEl.innerHTML = matches.map(m => {
+    const color = getGroupColor(m.group);
+    return `
+      <div class="sugg-item" onclick="selectMember('${m.alias}')">
+        <div class="sugg-avatar" style="background:${alphaHex(color,0.15)};color:${color}">${initials(m.alias)}</div>
+        <div class="sugg-names">
+          <div class="sugg-real">${m.alias} · ${m.real}</div>
+          <div class="sugg-alias">${m.en}</div>
+        </div>
+        <span class="sugg-group" style="color:${color}">${m.group}组</span>
+      </div>
+    `;
+  }).join('');
+  suggestionsEl.classList.add('open');
+});
+
+function selectMember(alias) {
+  const m = MEMBERS.find(x => x.alias === alias);
+  if (!m) return;
+  input.value = m.alias;
+  suggestionsEl.classList.remove('open');
+  renderCard(m);
+}
+
+// Close suggestions on outside click
+document.addEventListener('click', e => {
+  if (!document.getElementById('searchBox').contains(e.target)) {
+    suggestionsEl.classList.remove('open');
+  }
+});
+
+// Enter key
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const m = findMember(input.value);
+    suggestionsEl.classList.remove('open');
+    const area = document.getElementById('resultArea');
+    const card = document.getElementById('memberCard');
+    const nf   = document.getElementById('notFound');
+    if (m) {
+      area.classList.add('visible');
+      card.style.display = 'block';
+      nf.classList.remove('visible');
+      renderCard(m);
+    } else if (input.value.trim()) {
+      area.classList.add('visible');
+      card.style.display = 'none';
+      nf.classList.add('visible');
+    }
+  }
+});
+
+// ── RENDER ALL GROUPS ──
+function renderGroups() {
+  const grid = document.getElementById('groupsGrid');
+  grid.innerHTML = Object.entries(GROUPS).map(([letter, info]) => {
+    const members = MEMBERS.filter(m => m.group === letter);
+    const color = info.color;
+    return `
+      <div class="group-card">
+        <div class="group-label">
+          <div class="group-letter" style="background:${alphaHex(color,0.15)};color:${color}">${letter}</div>
+          <div class="group-name-text">${info.name}</div>
+        </div>
+        <div class="group-members">
+          ${members.map(m => `
+            <div class="gm-row" onclick="selectMember('${m.alias}')">
+              <div class="gm-avatar" style="background:${alphaHex(color,0.15)};color:${color}">${initials(m.alias)}</div>
+              <div>
+                <div class="gm-alias">${m.alias}</div>
+                <div class="gm-name">${m.real}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+renderGroups();
+</script>
+</body>
+</html>
